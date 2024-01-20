@@ -269,6 +269,24 @@ ALTER TABLE `user`
   ADD PRIMARY KEY (`id_user`);
 COMMIT;
 
+-- Add Trigger For Penggunaan Insert
+CREATE TRIGGER penggunaan_insert
+AFTER INSERT ON penggunaan
+FOR EACH ROW
+BEGIN
+  INSERT INTO tagihan (id_tagihan, id_penggunaan, id_pelanggan, bulan, tahun, jumlah_meter, status)
+  SELECT
+    CONCAT('TG', DATE_FORMAT(CURDATE(), '%Y%m%d'), IFNULL(MAX(CAST(MID(id_tagihan, LOCATE('_', id_tagihan) + 1, LENGTH(id_tagihan) - LOCATE('_', id_tagihan)) AS UNSIGNED)), 0) + 1),
+    NEW.id_penggunaan,
+    NEW.id_pelanggan,
+    NEW.bulan,
+    NEW.tahun,
+    NEW.meter_akhir - NEW.meter_awal,
+    'UNPAID'
+  FROM tagihan
+  WHERE LEFT(id_tagihan, LOCATE('_', id_tagihan)) = CONCAT('TG', DATE_FORMAT(CURDATE(), '%Y%m%d'));
+END;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
