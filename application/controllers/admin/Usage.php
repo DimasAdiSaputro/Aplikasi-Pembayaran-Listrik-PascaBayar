@@ -37,35 +37,69 @@ class Usage extends CI_Controller
 
   public function create($id_pelanggan)
   {
+    // Ambil data pelanggan
     $customer = $this->M_customer->get_by_id($id_pelanggan);
-    if (!$customer) show_404();
 
+    if (!$customer) {
+      show_404(); // Jika pelanggan tidak ditemukan
+    }
+
+    // Cek jika form disubmit
     if ($this->input->method() === 'post') {
       $this->form_validation->set_rules('meter_akhir', 'Meter Akhir', 'required|numeric');
-      if ($this->form_validation->run() === TRUE) {
+
+      if ($this->form_validation->run() == TRUE) {
+        $bulan = date('F');
+        $tahun = date('Y');
+        $meter_awal = 0;
+        $meter_akhir = $this->input->post('meter_akhir');
+
         $data = [
           'id_pelanggan' => $id_pelanggan,
-          'bulan' => date('F'),
-          'tahun' => date('Y'),
-          'meter_awal' => 0,
-          'meter_akhir' => $this->input->post('meter_akhir')
+          'bulan' => $bulan,
+          'tahun' => $tahun,
+          'meter_awal' => $meter_awal,
+          'meter_akhir' => $meter_akhir
         ];
+
         $this->M_usage->insert_penggunaan($data);
-        $this->session->set_flashdata('message_success', 'Berhasil menambahkan penggunaan!');
-        return redirect('administrator/penggunaan');
+
+        $this->session->set_flashdata('message_success', 'Data penggunaan berhasil ditambahkan.');
+        redirect('administrator/penggunaan');
       }
     }
 
-    $data['title'] = 'Input Penggunaan';
+    // Data untuk view
+    $data['title'] = 'Input Penggunaan Pelanggan';
     $data['customer'] = $customer;
-    $this->session->set_flashdata('form_values', [
-      'bulan' => date('F'),
-      'tahun' => date('Y'),
-      'meter_awal' => 0,
-      'meter_akhir' => set_value('meter_akhir', 0)
-    ]);
+    $data['user_auth'] = get_logged_in_user();
+    $data['bulan'] = date('F');
+    $data['tahun'] = date('Y');
+    $data['meter_awal'] = 0;
+    $data['meter_akhir'] = set_value('meter_akhir', 0);
+
+    $this->load->view('layouts/head', $data);
+    $this->load->view('layouts/sidebar_admin', $data);
+    $this->load->view('layouts/header_admin', $data);
     $this->load->view('admin/usage/v_usage_create', $data);
+    $this->load->view('layouts/footer', $data);
+    $this->load->view('layouts/end', $data);
   }
+
+  public function select_customer()
+  {
+    $data["title"] = "Pilih Pelanggan";
+    $data['user_auth'] = get_logged_in_user();
+    $data['customers'] = $this->M_customer->get_customers();
+
+    $this->load->view('layouts/head', $data);
+    $this->load->view('layouts/sidebar_admin', $data);
+    $this->load->view('layouts/header_admin', $data);
+    $this->load->view('admin/usage/v_select_customer', $data); // <-- view baru
+    $this->load->view('layouts/footer', $data);
+    $this->load->view('layouts/end', $data);
+  }
+
 
   public function edit($id_penggunaan)
   {

@@ -1,19 +1,7 @@
-<?php
-
-$bulan = "";
-$tahun = "";
-$meter_awal = "";
-$meter_akhir = "";
-
-if ($this->session->flashdata('form_values')) {
-  $values = $this->session->flashdata('form_values');
-  $bulan = $values['bulan'];
-  $tahun = $values['tahun'];
-  $meter_awal = $values['meter_awal'];
-  $meter_akhir = $values['meter_akhir'];
-}
-
-?>
+<input type="text" class="form-control form-control-lg " id="bulan" name="bulan" readonly value="<?= $bulan ?>">
+<input type="text" class="form-control form-control-lg " id="tahun" name="tahun" readonly value="<?= $tahun ?>">
+<input type="text" class="form-control form-control-lg" id="meter_awal" name="meter_awal" readonly value="<?= $meter_awal ?>">
+<input type="text" class="form-control form-control-lg" id="meter_akhir" name="meter_akhir" value="<?= $meter_akhir ?>">
 
 <main class="content">
 
