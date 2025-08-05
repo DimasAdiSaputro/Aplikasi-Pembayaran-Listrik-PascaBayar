@@ -98,6 +98,7 @@ $route['administrator/tarif/update/(:any)'] = 'admin/Tariff/getUpdate/$1';
 $route['administrator/tarif/post-update/(:any)'] = 'admin/Tariff/update/$1';
 
 $route['administrator/penggunaan'] = 'admin/Usage/index';
+$route['administrator/penggunaan/input/(:any)'] = 'admin/Usage/create/$1'; // ✅ FIXED!
 $route['administrator/penggunaan/hapus/(:any)'] = 'admin/Usage/delete/$1';
 
 $route['administrator/tagihan'] = 'admin/Bill/index';

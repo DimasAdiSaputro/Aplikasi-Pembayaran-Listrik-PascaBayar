@@ -5,8 +5,10 @@
       <div class="col-auto d-none d-sm-block">
         <h3><strong><?= $title ?></strong></h3>
       </div>
-
-
+      <div class="col-auto ms-auto text-end mt-n1">
+        <!-- <a href="#" class="btn btn-light bg-white me-2">Invite a Friend</a> -->
+        <a href="<?= base_url("administrator/penggunaan/input") ?>" class="btn btn-primary"> Input Penggunaan</a>
+      </div>
     </div>
 
     <div class="row">
@@ -41,7 +43,7 @@
                     <td><?php echo $u->daya ?></td>
                     <td>
                       <div class="d-flex gap-2">
-                        <!-- <a href="<?php echo site_url('administrator/penggunaan/input/' . $u->id_pelanggan) ?>" class="btn btn-primary btn-sm ">Edit</a> -->
+                        <a href="<?php echo site_url('administrator/penggunaan/input/' . $u->id_pelanggan) ?>" class="btn btn-primary btn-sm ">Edit</a>
                         <a href="<?php echo site_url('administrator/penggunaan/hapus/' . $u->id_penggunaan) ?>" class="btn btn-danger btn-sm">Hapus</a>
 
                       </div>

@@ -112,4 +112,5 @@ class M_usage extends CI_Model
     // }
     // return ["affected_rows" => $this->db->affected_rows(), "is_new" => $is_new];
   }
+  
 }

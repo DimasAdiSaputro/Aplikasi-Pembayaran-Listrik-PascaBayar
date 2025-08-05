@@ -16,6 +16,8 @@ class Usage extends CI_Controller
   {
     parent::__construct();
     is_user_login();
+    $this->load->model('M_usage');
+    $this->load->model('M_customer'); // kalau datanya dari Customer_model
   }
 
   public function index()
@@ -23,6 +25,7 @@ class Usage extends CI_Controller
     $data["title"] = "Data Penggunaan";
     $data['user_auth'] = get_logged_in_user();
     $data['usages'] = $this->M_usage->get_all_penggunaan();
+    $data['customers'] = $this->M_customer->get_all_pelanggan(); // tambahkan ini
 
     $this->load->view('layouts/head', $data);
     $this->load->view('layouts/sidebar_admin', $data);
@@ -31,6 +34,46 @@ class Usage extends CI_Controller
     $this->load->view('layouts/footer', $data);
     $this->load->view('layouts/end', $data);
   }
+
+  public function create($id_pelanggan)
+  {
+    $customer = $this->M_customer->get_by_id($id_pelanggan);
+    if (!$customer) show_404();
+
+    if ($this->input->method() === 'post') {
+      $this->form_validation->set_rules('meter_akhir', 'Meter Akhir', 'required|numeric');
+      if ($this->form_validation->run() === TRUE) {
+        $data = [
+          'id_pelanggan' => $id_pelanggan,
+          'bulan' => date('F'),
+          'tahun' => date('Y'),
+          'meter_awal' => 0,
+          'meter_akhir' => $this->input->post('meter_akhir')
+        ];
+        $this->M_usage->insert_penggunaan($data);
+        $this->session->set_flashdata('message_success', 'Berhasil menambahkan penggunaan!');
+        return redirect('administrator/penggunaan');
+      }
+    }
+
+    $data['title'] = 'Input Penggunaan';
+    $data['customer'] = $customer;
+    $this->session->set_flashdata('form_values', [
+      'bulan' => date('F'),
+      'tahun' => date('Y'),
+      'meter_awal' => 0,
+      'meter_akhir' => set_value('meter_akhir', 0)
+    ]);
+    $this->load->view('admin/usage/v_usage_create', $data);
+  }
+
+  public function edit($id_penggunaan)
+  {
+    // Buat dummy handler sementara
+    echo "Ini halaman edit penggunaan dengan ID: " . $id_penggunaan;
+    // TODO: Nanti isi logika update penggunaan di sini
+  }
+
 
   public function delete($id)
   {

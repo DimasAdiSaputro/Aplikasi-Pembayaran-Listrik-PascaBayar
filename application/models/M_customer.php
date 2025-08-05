@@ -137,4 +137,20 @@ class M_customer extends CI_Model
 
     return $is_data_filled;
   }
+  public function get_by_id($id)
+  {
+    $this->db->select('pelanggan.*, tarif.tarif_perkwh');
+    $this->db->from('pelanggan');
+    $this->db->join('tarif', 'tarif.id_tarif = pelanggan.id_tarif');
+    $this->db->where('pelanggan.id_pelanggan', $id);
+    return $this->db->get()->row();
+  }
+
+  public function get_all_pelanggan()
+  {
+    $this->db->select('pelanggan.*, tarif.daya');
+    $this->db->from('pelanggan');
+    $this->db->join('tarif', 'pelanggan.id_tarif = tarif.id_tarif', 'left');
+    return $this->db->get()->result();
+  }
 }
